@@ -1,43 +1,82 @@
-.app{
+.container {
+  max-width: 800px;
+  min-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: fit-content;
-  padding:10px;
-  text-align: center;
-  gap:10px;
-  align-items: stretch;
-
+  align-items: center;
 }
 
-html{
+form {
   display: flex;
-  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.form{
-  display: flex;
-  flex-direction: row;
-  gap:10px;
+button {
+  background-color: #008cba;
+  color: white;
 }
 
-.todo-list{
-  padding:0;
-  margin: 0;
+.lists-container {
   display: flex;
-  flex-direction: column;
-  list-style-type: none;
-  gap:10px;
-}
-
-.todo-list li{
-  display: flex;
+  width: 100%;
   justify-content: space-between;
 }
-.todo-list li span{
-  flex-grow: 1;
+
+.task-container {
+  background-color: #e6e2d3;
+  border-radius: 6px;
+}
+.list {
+  padding: 8px;
+  border: 5px solid white;
+  border-radius: 10px;
+  width: 50%;
+  background-color: #f0f0f0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.item-text {
+  flex: 1;
   text-align: center;
 }
 
+.item-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
+i {
+  border-radius: 4px;
+  margin: 1px;
+  padding: 4px;
+  color: white;
+}
+
+.edit-icn {
+  background-color: #008cba;
+}
+
+.delete-icn {
+  background-color: red;
+}
+
+.move-icn {
+  background-color: #4caf50;
+}
+
+.btn {
+  cursor: pointer;
+}
