@@ -106,45 +106,63 @@ const Model = (() => {
 */
 const View = (() => {
   const todolistEl = document.querySelector("#pending-tasks")
+  const completedTodolistEl = document.querySelector("#completed-tasks")
   const submitBtnEl = document.querySelector(".submit-btn")
   const inputEl = document.querySelector("#submit-task")
   const editEl = document.querySelector(".edit-btn")
   const deleteEl = document.querySelector(".delete-btn")
-  const moveLeftEl = document.querySelector(".mv-left-btn")
+  const moveLeftEl = document.querySelector(".move-left-icn")
   const moveRightEl = document.querySelector(".mv-right-btn")
   const itemText = document.querySelector(".item-text")
 
   const renderTodos = (todos) => {
     let todosTemplate = ""
+    let completeTodosTemplate = ""
     todos.forEach((todo) => {
-      const liTemplate = `<ul class="task-container" id="pending-tasks">
+      if (todo.completed === true) {
+        const liTemplate = `<ul class="task-container" id="completed-tasks">
+        <li class="item-container">
+        <i id="${todo.id}" class="fa fa-arrow-left move-left-icn move-icn btn"></i>
+        <div class="item-text">${todo.content}</div>
+        <div class="item-actions">
+          <i id="${todo.id}" class="fa fa-edit edit-icn btn edit-btn"></i>
+          <i id="${todo.id}" class="fa fa-trash delete-icn btn delete-btn"></i>
+        </div>
+        <input type="text" class="edit-input" style="display: none" />
+      </li>
+    </ul>`
+        completeTodosTemplate += liTemplate
+      } else {
+        const liTemplate = `<ul class="task-container" id="pending-tasks">
       <li class="item-container">
         <div class="item-text">${todo.content}</div>
         <div class="item-actions">
           <i  id="${todo.id}" class="fa fa-edit edit-icn btn edit-btn"></i>
           <i  id="${todo.id}" class="fa fa-trash delete-icn btn delete-btn"></i>
-          <i  id="${todo.id}" class="fa fa-arrow-right move-icn btn mv-left-btn"></i>
+          <i  id="${todo.id}" class="fa fa-arrow-right move-icn btn move-right-icn"></i>
         </div>
       </li>
     </ul>`
 
-      todosTemplate += liTemplate
+        todosTemplate += liTemplate
+      }
     })
     if (todos.length === 0) {
       todosTemplate = "<h4>no task to display!</h4>"
     }
     todolistEl.innerHTML = todosTemplate
+    completedTodolistEl.innerHTML = completeTodosTemplate
   }
 
   const clearInput = () => {
     inputEl.value = ""
   }
 
-  return { renderTodos, submitBtnEl, inputEl, clearInput, todolistEl, itemText, editEl, deleteEl, moveLeftEl, moveRightEl }
+  return { renderTodos, submitBtnEl, inputEl, completedTodolistEl, clearInput, todolistEl, itemText, editEl, deleteEl, moveLeftEl, moveRightEl }
 })()
 
 const Controller = ((view, model) => {
-  console.log(view.editEl, "editEl viewwww")
+  console.log(view, "editEl viewwww")
   const state = new model.State()
   const init = () => {
     model.getTodos().then((todos) => {
@@ -172,9 +190,16 @@ const Controller = ((view, model) => {
     view.todolistEl.addEventListener("click", (event) => {
       const deleteBtnRegex = /delete-btn/g
       const editBtnRegex = /edit-btn/g
+      const moveLeftBtnRegex = /move-left-icn/g
+      const moveRightBtnRegex = /move-right-icn/g
       const elementClass = event.target.className
       const hasDeleteBtn = elementClass.match(deleteBtnRegex)
       const hasEditBtn = elementClass.match(editBtnRegex)
+      const hasMoveLeftBtn = elementClass.match(moveLeftBtnRegex)
+      const hasMoveRightBtn = elementClass.match(moveRightBtnRegex)
+      console.log("======on click==============")
+      console.log(elementClass)
+      console.log("====================================")
       if (hasDeleteBtn) {
         const id = event.target.id
         model.deleteTodo(+id).then((data) => {
@@ -210,6 +235,53 @@ const Controller = ((view, model) => {
           itemTextEl.style.display = "block"
           itemContainerEl.removeChild(inputEl)
           itemContainerEl.classList.remove("editing")
+        }
+      } else if (hasMoveLeftBtn) {
+        console.log("move item left")
+        const id = event.target.parentElement.parentElement.querySelector(".edit-icn").id
+
+        console.log(id)
+
+        const todo = state.todos.find((t) => t.id == id)
+
+        console.log(todo)
+        if (todo) {
+          model
+            .updateTodo({
+              id: todo.id,
+              content: todo.content,
+              completed: false,
+            })
+            .then((data) => {
+              state.todos = state.todos.map((t) => {
+                if (t.id === data.id) {
+                  return data
+                }
+                return t
+              })
+            })
+        }
+      } else if (hasMoveRightBtn) {
+        console.log("move item right")
+        const id = event.target.parentElement.parentElement.querySelector(".edit-icn").id
+        console.log(id)
+        const todo = state.todos.find((t) => t.id == id)
+        console.log(todo)
+        if (todo) {
+          model
+            .updateTodo({
+              id: todo.id,
+              content: todo.content,
+              completed: true,
+            })
+            .then((data) => {
+              state.todos = state.todos.map((t) => {
+                if (t.id === data.id) {
+                  return data
+                }
+                return t
+              })
+            })
         }
       }
     })

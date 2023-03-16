@@ -2,7 +2,38 @@
   "todos": [
     {
       "id": 2,
-      "content": "sdssedfer"
+      "content": "sdssedfer",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "content": "sdsdfdfsedfer",
+      "completed": true
+    },
+    {
+      "id": 4,
+      "content": "dfgf",
+      "completed": true
+    },
+    {
+      "id": 5,
+      "content": "dfgf",
+      "completed": true
+    },
+    {
+      "id": 6,
+      "content": "dfgf",
+      "completed": true
+    },
+    {
+      "id": 7,
+      "content": "dfgf",
+      "completed": true
+    },
+    {
+      "id": 9,
+      "content": "dfgf",
+      "completed": false
     }
   ]
 }
